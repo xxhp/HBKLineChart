@@ -44,7 +44,7 @@ class HBKLineChartView: UIView {
         // Drawing code
         self.drawBorder(rect)
         self.drawYAxis()
-        self.drawCandleStcik()
+        self.drawCandleStick()
         self.drawCrossLine()
         
     }
@@ -115,7 +115,7 @@ class HBKLineChartView: UIView {
         
     }
     
-    func drawCandleStcik() -> () {
+    func drawCandleStick() -> () {
         
         for ( index,  stockModel) in self.KStockModelArray.enumerated() {
             
