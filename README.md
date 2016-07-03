@@ -12,3 +12,7 @@ Xcode 8.0, Swift 3.0
 
 HBKLineChart is licensed under the MIT license 
 
+###Screenshot
+
+<img src="https://github.com/xxhp/HBKLineChart/blob/master/screenshot.png">
+
