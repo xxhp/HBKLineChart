@@ -1,6 +1,6 @@
 ###HBKLineChart
 
-The HBKLineChart is a candlestick chart used to display stock information using high, low, open and close values. I wrote it for learning swift programming.Another project in Objective C inspired me:
+The HBKLineChart is a candlestick chart used to display stock information using high, low, open and close values. I wrote it for learning swift programming.There is a project in Objective C inspired me:
 https://github.com/yate1996/Y_KLine
 
 ###Requirements
