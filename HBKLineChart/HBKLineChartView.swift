@@ -127,10 +127,13 @@ class HBKLineChartView: UIView {
             context.setStrokeColor(strokeColor.cgColor)
             let openPoint = CGPoint(x: Double(xPosition),y:Double(maxY - ( stockModel.open! - minLocalElement)/scaleYAxis))
             let closePointY = maxY - ( stockModel.close! - minLocalElement)/scaleYAxis
-            let closePoint = CGPoint(x:Double(xPosition),y:Double(closePointY))
+            var closePoint = CGPoint(x:Double(xPosition),y:Double(closePointY))
             let highPoint = CGPoint(x: Double(xPosition), y: Double(maxY) - Double(( stockModel.high! - minLocalElement)/scaleYAxis))
             let lowPoint = CGPoint(x: Double(xPosition), y: Double(maxY - ( stockModel.low! - minLocalElement)/scaleYAxis))
             
+            if closePoint.y == openPoint.y {
+                closePoint.y += 1
+            }
         
             context.setLineWidth(1)
             let shadowPoints = [highPoint, lowPoint]

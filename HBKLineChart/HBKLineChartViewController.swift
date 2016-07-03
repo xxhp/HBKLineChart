@@ -41,7 +41,9 @@ class HBKLineChartViewController: UIViewController {
             return MaxDrawCount
         }
     }
-    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return UIStatusBarStyle.lightContent
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = Constant.backgroundColor
@@ -76,10 +78,10 @@ class HBKLineChartViewController: UIViewController {
         self.view.insertSubview(zoomOutButton, aboveSubview: kLineChartView!)
         self.view.insertSubview(zoomInButton, aboveSubview: kLineChartView!)
         
-        self.queryNet()
+        self.queryNetData()
         
     }
-    func queryNet() -> () {
+    func queryNetData() -> () {
         NetService.queryData(completed: {data,error in
             let dataString = NSString(data: data as Data, encoding: String.Encoding.utf8.rawValue)
             let dataArray = dataString!.components(separatedBy: NSCharacterSet.newlines()) as NSArray!
