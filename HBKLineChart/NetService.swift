@@ -23,22 +23,28 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
+
 import UIKit
-typealias ServiceResponse = (NSData, NSError?) -> Void
+typealias ServiceResponse = (_ data :Data,_ response:URLResponse?,_ error :NSError?) -> Void
 class NetService: NSObject {
 
-    class func queryData(completed : ServiceResponse) {
-        let url =  "http://ichart.yahoo.com/table.csv?s=600050.ss&g=d"
-        let request = NSMutableURLRequest(url:URL(string: url)!)
-        let session = URLSession.shared()
-        let task = session.dataTask(with: request as URLRequest) { (data, response, error) in
-              completed(data!, error)
-        }
+    class func queryData(completed : @escaping ServiceResponse) {
+        let listUrlString =  "http://ichart.yahoo.com/table.csv?s=600050.ss&g=d"
+        let myUrl = URL(string: listUrlString);
+//        let request = NSMutableURLRequest(url:URL(string: url)!)
+        let request = URLRequest(url:myUrl!)
+        let session = URLSession.shared
+      
+
+        session.dataTask(with: request, completionHandler: { (data, response, error) in
+            
+                completed(data!, response, error as NSError?) 
+
+            
+        }).resume()
         
-        task.resume()
-        
-       
     }
+ 
 
 }
 

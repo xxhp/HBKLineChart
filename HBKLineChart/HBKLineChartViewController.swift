@@ -41,7 +41,7 @@ class HBKLineChartViewController: UIViewController {
             return MaxDrawCount
         }
     }
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+    override var preferredStatusBarStyle : UIStatusBarStyle {
         return UIStatusBarStyle.lightContent
     }
     override func viewDidLoad() {
@@ -82,13 +82,13 @@ class HBKLineChartViewController: UIViewController {
         
     }
     func queryNetData() -> () {
-        NetService.queryData(completed: {data,error in
+        NetService.queryData(completed: { data,response,error in
             let dataString = NSString(data: data as Data, encoding: String.Encoding.utf8.rawValue)
-            let dataArray = dataString!.components(separatedBy: NSCharacterSet.newlines()) as NSArray!
+            let dataArray = dataString?.components(separatedBy: NSCharacterSet.newlines)
             
-            let dataReversArray = dataArray?.reverseObjectEnumerator().allObjects as NSArray!
-            for  (index, string) in (dataReversArray?.enumerated())!  {
-                if (index != 0 && index != (dataReversArray?.count)! - 1) {
+            let dataReverseArray = dataArray?.reversed()
+            for   (index, string) in dataReverseArray!.enumerated(){
+                if (index != 0 && index != (dataReverseArray!.count) - 1) {
                     let stringArray = string.components(separatedBy:",") as NSArray
                     let date = stringArray.object(at: 0) as! String
                     let open = stringArray.object(at: 1) as! String
@@ -96,7 +96,7 @@ class HBKLineChartViewController: UIViewController {
                     let low = stringArray.object(at: 3) as! String
                     let close = stringArray.object(at: 4) as! String
                     let volume = stringArray.object(at: 5) as! String
-                    if Float(volume) > 0 {
+                    if Float(volume)! > 0 {
                         let user = HBStockModel(low:Float(low)!, high:Float(high)!, open: Float(open)!, close: Float(close)!, date:date, volume: Float(volume)!)
                         self.items.add(user)
                     }

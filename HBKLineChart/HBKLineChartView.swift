@@ -64,11 +64,11 @@ class HBKLineChartView: UIView {
     }
     func prepareData() -> () {
         
-        keyMaxElement = self.KStockModelArray.max(isOrderedBefore: { (a, b) -> Bool in
-            return a.high < b.high
+        keyMaxElement = self.KStockModelArray.max(by: { (a, b) -> Bool in
+            return a.high! < b.high!
         })
-        keyMinElement = self.KStockModelArray.max(isOrderedBefore: { (a, b) -> Bool in
-            return a.low > b.low
+        keyMinElement = self.KStockModelArray.max(by: { (a, b) -> Bool in
+            return a.low! > b.low!
         })
         let minY :Float = topMargin
         let maxY :Float = Float(self.frame.size.height) - bottomMargin
@@ -82,7 +82,7 @@ class HBKLineChartView: UIView {
         let context = UIGraphicsGetCurrentContext()!
         let dash:[CGFloat] = [2.0,1.0]
         context.setLineWidth(1)
-        context.setLineDash (phase: 0,lengths: dash,count: 2)
+        context.setLineDash (phase: 0,lengths: dash)
         for  i in 0 ..< 5 {
             let value :Float = maxLocalElement - Float(i) * (maxLocalElement - minLocalElement)/4
             let yLine :Float = topMargin + (maxLocalElement - value)/scaleYAxis
@@ -95,7 +95,7 @@ class HBKLineChartView: UIView {
             //price
             context.setShouldAntialias(true)
             let textAttributes: [String: AnyObject] = [
-                NSForegroundColorAttributeName : UIColor.lightGray(),
+                NSForegroundColorAttributeName : UIColor.lightGray,
                 NSFontAttributeName : UIFont.systemFont(ofSize: 11)
             ]
             let labelString = String(format:"%.2f", value)
@@ -104,14 +104,15 @@ class HBKLineChartView: UIView {
             if i != 0 && i != 4 {
                 context.setStrokeColor(Constant.gridLineColor.cgColor)
                 x = (self.frame.size.width)
-                context.moveTo(x:1,y: CGFloat(yLine))
-                context.addLineTo(x: x,y: CGFloat(yLine))
+                context.move(to:CGPoint(x:1,y: CGFloat(yLine)))
+                context.addLine(to:CGPoint(x: x,y: CGFloat(yLine)))
                 context.strokePath()
                 
             }
             
         }
-        context.setLineDash (phase: 0,lengths: nil,count: 0)
+        context.setLineDash(phase: 0, lengths:[])
+     
         
     }
     
@@ -123,9 +124,9 @@ class HBKLineChartView: UIView {
             let xPosition:Float =  Float(Constant.lineWidth/2) + Float(index)*(Float(Constant.lineWidth) + Float(Constant.lineGap))
             let context = UIGraphicsGetCurrentContext()!
            
-            let strokeColor : UIColor =  stockModel.open > stockModel.close ? Constant.downColor : Constant.upColor
+            let strokeColor : UIColor =  stockModel.open! > stockModel.close! ? Constant.downColor : Constant.upColor
             context.setStrokeColor(strokeColor.cgColor)
-            let openPoint = CGPoint(x: Double(xPosition),y:Double(maxY - ( stockModel.open! - minLocalElement)/scaleYAxis))
+            let openPoint = CGPoint(x: Double(xPosition),y:Double(maxY - (stockModel.open! - minLocalElement)/scaleYAxis))
             let closePointY = maxY - ( stockModel.close! - minLocalElement)/scaleYAxis
             var closePoint = CGPoint(x:Double(xPosition),y:Double(closePointY))
             let highPoint = CGPoint(x: Double(xPosition), y: Double(maxY) - Double(( stockModel.high! - minLocalElement)/scaleYAxis))
@@ -137,10 +138,10 @@ class HBKLineChartView: UIView {
         
             context.setLineWidth(1)
             let shadowPoints = [highPoint, lowPoint]
-            context.strokeLineSegments(between: shadowPoints, count: 2)
+            context.strokeLineSegments(between: shadowPoints)
             context.setLineWidth(CGFloat(Constant.lineWidth))
             let solidPoints = [openPoint, closePoint]
-            context.strokeLineSegments(between: solidPoints, count: 2)
+            context.strokeLineSegments(between : solidPoints)
             
             
         }
@@ -163,16 +164,16 @@ class HBKLineChartView: UIView {
                 let y : CGFloat = fY - size.height/2
                 //horizonal line
                 context.setLineWidth(1)
-                context.setStrokeColor(UIColor.white().cgColor)
+                context.setStrokeColor(UIColor.white.cgColor)
                 if(self.selectedPoint.x<size.width+50){
                     x = self.frame.size.width - size.width
-                    context.moveTo(x: 0, y: fY)
-                    context.addLineTo(x: x, y: fY)
+                    context.move(to:CGPoint(x: 0, y: fY))
+                    context.addLine(to:CGPoint(x: x, y: fY))
                     context.strokePath()
                     
                 }else{
-                    context.moveTo(x: size.width, y: fY)
-                    context.addLineTo(x: self.frame.size.width, y: fY)
+                    context.move(to:CGPoint(x: size.width, y: fY))
+                    context.addLine(to:CGPoint(x: self.frame.size.width, y: fY))
                     context.strokePath()
                 }
                 
@@ -180,7 +181,7 @@ class HBKLineChartView: UIView {
                 context.setFillColor(UIColor.init(colorLiteralRed: 52.0/255, green: 68.0/255, blue: 106.0/255, alpha: 1).cgColor)
                 roundedRect.fill()
                 
-                string.draw(at:CGPoint(x:x, y:y), withAttributes:[NSFontAttributeName: UIFont.systemFont(ofSize: 12), NSForegroundColorAttributeName: UIColor.white()])
+                string.draw(at:CGPoint(x:x, y:y), withAttributes:[NSFontAttributeName: UIFont.systemFont(ofSize: 12), NSForegroundColorAttributeName: UIColor.white])
                 let date = selectedModel?.date
                 var datesize: CGSize = date!.size(attributes:[NSFontAttributeName: UIFont.systemFont(ofSize:12.0)])
                 datesize = CGSize(width: datesize.width + 4,height:datesize.height)
@@ -188,12 +189,12 @@ class HBKLineChartView: UIView {
                 //vertical line
                 context.setLineWidth(1)
                 let xPosition :CGFloat = Constant.lineWidth/2 +  CGFloat( index) * (Constant.lineWidth + Constant.lineGap)
-                context.setStrokeColor(UIColor.white().cgColor)
-                context.moveTo(x: xPosition, y: 0)
-                context.addLineTo(x: xPosition, y: self.frame.size.height - CGFloat(bottomMargin))
+                context.setStrokeColor(UIColor.white.cgColor)
+                context.move(to:CGPoint(x: xPosition, y: 0))
+                context.addLine(to:CGPoint(x: xPosition, y: self.frame.size.height - CGFloat(bottomMargin)))
                 context.strokePath()
                 
-                context.setFillColor(UIColor.white().cgColor)
+                context.setFillColor(UIColor.white.cgColor)
                 let circlePath : UIBezierPath = UIBezierPath(arcCenter: CGPoint(x: xPosition,y: fY), radius: CGFloat(4), startAngle: CGFloat(0), endAngle:CGFloat(M_PI * 2), clockwise: true)
                 circlePath.fill()
                 
@@ -209,7 +210,7 @@ class HBKLineChartView: UIView {
                 context.setFillColor(UIColor.init(colorLiteralRed: 52.0/255, green: 68.0/255, blue: 106.0/255, alpha: 1).cgColor)
                 dateRect.fill()
                 
-                date?.draw(at:p, withAttributes:[NSFontAttributeName: UIFont.systemFont(ofSize: 12), NSForegroundColorAttributeName: UIColor.white()])
+                date?.draw(at:p, withAttributes:[NSFontAttributeName: UIFont.systemFont(ofSize: 12), NSForegroundColorAttributeName: UIColor.white])
             }
         }
     }
